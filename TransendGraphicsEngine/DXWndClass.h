@@ -49,7 +49,7 @@ public:
 
 	int CalculateFPS();
 
-	float GetXYZPos(char axis);
+	//static float GetXYZPos(char axis);
 
 	// Change + Get Camera Position
 	const XMFLOAT3& GetCameraPos() const { return camPos; }

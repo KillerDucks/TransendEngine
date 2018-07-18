@@ -35,18 +35,13 @@ void Keyboard::KeyDown(WPARAM key)
 
 		// Arrow Keys
 	case VK_UP:
-		printf_s("Key Pressed -> Up\n");
-		
+		printf_s("Key Pressed -> Up\n");		
 		baseFloat.z = baseFloat.z + 0.1f;
-		//XMFLOAT3 tmpFloat = baseFloat;
-
 		dxClass.UpdateCamera(tmpFloat);
 		break;
 	case VK_LEFT:
 		printf_s("Key Pressed -> Left\n");
-		
 		baseFloat.x = baseFloat.x - 0.1f;
-		//XMFLOAT3 tmpFloat = baseFloat;
 		dxClass.UpdateCamera(tmpFloat);
 		break;
 	case VK_RIGHT:
@@ -59,7 +54,6 @@ void Keyboard::KeyDown(WPARAM key)
 		break;
 	case VK_DOWN:
 		printf_s("Key Pressed -> Down\n");
-
 		baseFloat.z = baseFloat.z - 0.1f;
 		dxClass.UpdateCamera(tmpFloat);
 		break;
@@ -67,7 +61,6 @@ void Keyboard::KeyDown(WPARAM key)
 	case 0x57:
 		// W Key
 		printf_s("Key Pressed -> W\n");
-
 		baseFloat.y = baseFloat.y + 0.1f;
 		dxClass.UpdateCamera(tmpFloat);
 		break;

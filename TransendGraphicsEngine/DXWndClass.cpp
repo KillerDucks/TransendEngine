@@ -509,64 +509,72 @@ void DXWndClass::Render()
 // Render the Grid
 //
 
-	g_pImmediateContext->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
-	g_pImmediateContext->OMSetDepthStencilState(m_states->DepthNone(), 0);
-	g_pImmediateContext->RSSetState(m_states->CullNone());
+	//g_pImmediateContext->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
+	//g_pImmediateContext->OMSetDepthStencilState(m_states->DepthNone(), 0);
+	//g_pImmediateContext->RSSetState(m_states->CullNone());
 
-	m_effect->SetWorld(m_world);
+	//m_effect->SetWorld(m_world);
 
-	m_effect->Apply(g_pImmediateContext);
+	//m_effect->Apply(g_pImmediateContext);
 
-	g_pImmediateContext->IASetInputLayout(m_inputLayout.Get());
+	//g_pImmediateContext->IASetInputLayout(m_inputLayout.Get());
 
-	m_batch->Begin();
+	//m_batch->Begin();
 
-	DirectX::SimpleMath::Vector3 xaxis(2.f, 0.f, 0.f);
-	DirectX::SimpleMath::Vector3 yaxis(0.f, 0.f, 2.f);
-	DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3::Zero;
+	//DirectX::SimpleMath::Vector3 xaxis(2.f, 0.f, 0.f);
+	//DirectX::SimpleMath::Vector3 yaxis(0.f, 0.f, 2.f);
+	//DirectX::SimpleMath::Vector3 origin = DirectX::SimpleMath::Vector3::Zero;
 
-	size_t divisions = 20;
+	//size_t divisions = 20;
 
-	for (size_t i = 0; i <= divisions; ++i)
-	{
-		float fPercent = float(i) / float(divisions);
-		fPercent = (fPercent * 2.0f) - 1.0f;
+	//for (size_t i = 0; i <= divisions; ++i)
+	//{
+	//	float fPercent = float(i) / float(divisions);
+	//	fPercent = (fPercent * 2.0f) - 1.0f;
 
-		DirectX::SimpleMath::Vector3 scale = xaxis * fPercent + origin;
+	//	DirectX::SimpleMath::Vector3 scale = xaxis * fPercent + origin;
 
-		VertexPositionColor v1(scale - yaxis, Colors::White);
-		VertexPositionColor v2(scale + yaxis, Colors::White);
-		m_batch->DrawLine(v1, v2);
-	}
+	//	VertexPositionColor v1(scale - yaxis, Colors::White);
+	//	VertexPositionColor v2(scale + yaxis, Colors::White);
+	//	m_batch->DrawLine(v1, v2);
+	//}
 
-	for (size_t i = 0; i <= divisions; i++)
-	{
-		float fPercent = float(i) / float(divisions);
-		fPercent = (fPercent * 2.0f) - 1.0f;
+	//for (size_t i = 0; i <= divisions; i++)
+	//{
+	//	float fPercent = float(i) / float(divisions);
+	//	fPercent = (fPercent * 2.0f) - 1.0f;
 
-		DirectX::SimpleMath::Vector3 scale = yaxis * fPercent + origin;
+	//	DirectX::SimpleMath::Vector3 scale = yaxis * fPercent + origin;
 
-		VertexPositionColor v1(scale - xaxis, Colors::White);
-		VertexPositionColor v2(scale + xaxis, Colors::White);
-		m_batch->DrawLine(v1, v2);
-	}
+	//	VertexPositionColor v1(scale - xaxis, Colors::White);
+	//	VertexPositionColor v2(scale + xaxis, Colors::White);
+	//	m_batch->DrawLine(v1, v2);
+	//}
 
-	m_batch->End();
+	//m_batch->End();
 
-	////printf_s("fps : %d \n", this->CalculateFPS());
+	//printf_s("FPS -> %d \n", this->CalculateFPS());
 
-	////
-	//// Animate the cube (Cube 0)
-	////
-	//g_World = XMMatrixRotationY(t);
+	//
+	// Animate the cube (Cube 0)
+	//
+	g_World = XMMatrixRotationY(t);
 
-	//// Cube (Cube 1):  Rotate around origin
-	//XMMATRIX mSpin = XMMatrixRotationZ(-t);
-	//XMMATRIX mOrbit = XMMatrixRotationY(-t * 2.0f);
+	// Cube (Cube 1):  Rotate around origin
+	//XMMATRIX mSpin = XMMatrixRotationZ(t);
+	//XMMATRIX mOrbit = XMMatrixRotationY(t * 2.0f);
 	//XMMATRIX mTranslate = XMMatrixTranslation(-4.0f, 0.0f, 0.0f);
 	//XMMATRIX mScale = XMMatrixScaling(0.3f, 0.3f, 0.3f);
 
-	//g_World1 = mScale * mSpin * mTranslate * mOrbit;
+	float distance = 5.0f;
+	XMMATRIX matSpin = XMMatrixRotationZ(-t);
+	XMMATRIX matRot = XMMatrixRotationX(distance * cos(90));
+	XMMATRIX matOrbit = XMMatrixRotationY(-t * 2.0f);
+	XMMATRIX matTrans = XMMatrixTranslation(2.0f, 2.0f, 0.0f);
+	XMMATRIX matScale = XMMatrixScaling(0.3f, 0.3f, 0.3f);
+	XMMATRIX matFinal = matTrans * matRot * matOrbit * matSpin * matScale;
+
+	g_World1 = matFinal;
 
 	//
 	// Clear the back buffer
@@ -578,65 +586,66 @@ void DXWndClass::Render()
 	//
 	g_pImmediateContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	////
-	//// Update variables
-	////
-	//ConstantBuffer cb;
-	//cb.mWorld = XMMatrixTranspose(g_World);
-	//cb.mView = XMMatrixTranspose(g_View);
-	//cb.mProjection = XMMatrixTranspose(g_Projection);
-	//g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-	////
-	//// Renders a triangle
-	////
-	//g_pImmediateContext->VSSetShader(g_pVertexShader, nullptr, 0);
-	//g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	//g_pImmediateContext->PSSetShader(g_pPixelShader, nullptr, 0);
-	//g_pImmediateContext->DrawIndexed(36, 0, 0);				// 36 vertices needed for 12 triangles in a triangle list
+	//
+	// Update variables
+	//
+	ConstantBuffer cb;
+	cb.mWorld = XMMatrixTranspose(g_World);
+	cb.mView = XMMatrixTranspose(g_View);
+	cb.mProjection = XMMatrixTranspose(g_Projection);
+	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
 	//
-	////
-	//// Update variables for the second cube
-	////
-	//ConstantBuffer cb2;
-	//cb2.mWorld = XMMatrixTranspose(g_World1);
-	//cb2.mView = XMMatrixTranspose(g_View);
-	//cb2.mProjection = XMMatrixTranspose(g_Projection);
-	//g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb2, 0, 0);
+	// Renders a triangle
+	//
+	g_pImmediateContext->VSSetShader(g_pVertexShader, nullptr, 0);
+	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	g_pImmediateContext->PSSetShader(g_pPixelShader, nullptr, 0);
+	g_pImmediateContext->DrawIndexed(36, 0, 0);				// 36 vertices needed for 12 triangles in a triangle list
 
-	////
-	//// Render the second cube
-	////
-	//g_pImmediateContext->DrawIndexed(36, 0, 0);
+	
+	//
+	// Update variables for the second cube
+	//
+	ConstantBuffer cb2;
+	cb2.mWorld = XMMatrixTranspose(g_World1);
+	cb2.mView = XMMatrixTranspose(g_View);
+	cb2.mProjection = XMMatrixTranspose(g_Projection);
+	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb2, 0, 0);
 
-	////
-	//// Render Text
-	////
-	//m_spriteBatch->Begin();
+	//
+	// Render the second cube
+	//
+	g_pImmediateContext->DrawIndexed(36, 0, 0);
 
-	//wchar_t m_fpsCount[256];
-	//swprintf_s(m_fpsCount, L"FPS: %d", CalculateFPS());
+	//
+	// Render Text
+	//
+	m_spriteBatch->Begin();
 
-	//wchar_t m_XYZ[256];
-	////swprintf_s(m_XYZ, L"(X,Y,Z): %0.2f , %0.2f , %0.2f", this->GetXYZ().x, this->GetXYZ().y, this->GetXYZ().z);
-	////swprintf_s(m_XYZ, L"(X,Y,Z): %0.2f , %0.2f , %0.2f", GetXYZPos('x'), GetXYZPos('y'), GetXYZPos('z'));
+	wchar_t m_fpsCount[256];
+	swprintf_s(m_fpsCount, L"FPS: %d", CalculateFPS());
+
+	//wchar_t m_XYZ;
+	//m_XYZ = (wchar_t)"[X,Y,Z] --> Not yet avaliable";
+	//swprintf_s(m_XYZ, L"(X,Y,Z): %0.2f , %0.2f , %0.2f", this->GetXYZ().x, this->GetXYZ().y, this->GetXYZ().z);
+	//swprintf_s(m_XYZ, L"(X,Y,Z): %0.2f , %0.2f , %0.2f", GetXYZPos('x'), GetXYZPos('y'), GetXYZPos('z'));
 	//swprintf_s(m_XYZ, L"FPS: %d", CalculateFPS());
 
 
-	//const wchar_t* output1 = m_fpsCount;
-	//const wchar_t* output2 = m_XYZ;
+	const wchar_t* output1 = m_fpsCount;
+	//const wchar_t* output2 = (const wchar_t*)m_XYZ;
 
-	//DirectX::SimpleMath::Vector2 origin1 = m_font->MeasureString(output1) / 2.f;
+	DirectX::SimpleMath::Vector2 origin1 = m_font->MeasureString(output1) / 2.f;
 	//DirectX::SimpleMath::Vector2 origin2 = m_font->MeasureString(output2) / 2.f;
 
-	//m_font->DrawString(m_spriteBatch.get(), output1,
-	//	m_fontPos1, Colors::Red, 0.f, origin1);
+	m_font->DrawString(m_spriteBatch.get(), output1,
+		m_fontPos1, Colors::Red, 0.f, origin1);
 
 	//m_font->DrawString(m_spriteBatch.get(), output2,
 	//	m_fontPos2, Colors::Red, 0.f, origin2);
 
-	//m_spriteBatch->End();
+	m_spriteBatch->End();
 
 
 
@@ -729,25 +738,25 @@ int DXWndClass::CalculateFPS()
 	return iFps;
 }
 
-float DXWndClass::GetXYZPos(char axis)
-{
-	switch (axis)
-	{
-	case 'x':
-		return this->camXYZPos.x;
-		break;
-	case 'y':
-		return this->camXYZPos.y;
-		break;
-	case 'z':
-		return this->camXYZPos.z;
-		break;
-
-	default:
-		return 0.0f;
-		break;
-	}
-}
+//float DXWndClass::GetXYZPos(char axis)
+//{
+//	switch (axis)
+//	{
+//	case 'x':
+//		return this->camXYZPos.x;
+//		break;
+//	case 'y':
+//		return this->camXYZPos.y;
+//		break;
+//	case 'z':
+//		return this->camXYZPos.z;
+//		break;
+//
+//	default:
+//		return 0.0f;
+//		break;
+//	}
+//}
 
 //--------------------------------------------------------------------------------------
 // Clean up the objects we've created
